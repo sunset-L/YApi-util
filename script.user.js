@@ -61,13 +61,14 @@
         let reqbody = resData.req_body_other
           ? `export interface ReqBody ${generateInterface(JSON.parse(resData.req_body_other))}`
           : ''
-        const resbody = `export interface ResBody ${generateInterface(JSON.parse(resData.res_body), true)}`
+        const resbody = `export interface ResBody ${generateInterface(JSON.parse(resData.res_body), { isRes: true, gap: '  ' })}`
         GM_setClipboard(`${reqbody}\n${resbody}`, 'text')
         toastr.success('Copied！')
       });
   })
 
-  const generateInterface = (obj, isRes) => {
+  const generateInterface = (obj, opt = { isRes: false, gap: `  ` }) => {
+    const { isRes, gap } = opt
     let result = `{\n`
     if (obj.properties) {
       const keys = Object.keys(obj.properties)
@@ -75,24 +76,24 @@
         keys.forEach(k => {
           const type = typeTojs(obj.properties[k].type)
           const description = obj.properties[k].description
-          const remark = description ? `  // ${description}\n` : ''
+          const remark = description ? `${gap}// ${description}\n` : ''
           // 响应体的时候默认都是必须
           const isRequired = obj.required && obj.required.includes(k) || isRes
           const field = `${k}${isRequired ? '': '?'}`
           switch (type) {
             case 'any':
-              result += `${remark}  ${field}: ${generateInterface(obj.properties[k])}\n`
+              result += `${remark}${gap}${field}: ${generateInterface(obj.properties[k], { ...opt, gap: `${gap}  ` })}\n`
               break
             case 'Array':
-              result += `${remark}  ${field}: Array<${generateInterface(obj.properties[k].items)}>\n`
+              result += `${remark}${gap}${field}: Array<${generateInterface(obj.properties[k].items,  { ...opt, gap: `${gap}  ` })}>\n`
               break
             default:
-              result += `${remark}  ${field}: ${type}\n`
+              result += `${remark}${gap}${field}: ${type}\n`
           }
         })
       }
     }
-    result += '}'
+    result += `${gap.substring(2)}}`
     return result
   }
 
