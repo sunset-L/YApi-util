@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YApi tools
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  YApi支持点击复制ts interface、侧边菜单stick
 // @author       sunset-L
 // @match        *://*/project/*/interface/api/*
