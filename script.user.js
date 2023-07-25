@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  YApi支持点击复制ts interface、侧边菜单stick
 // @author       sunset-L
-// @match        *://*/project/*/interface/api/*
+// @match        *://*/project/*/interface/api*
 // @grant        GM_addElement
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
